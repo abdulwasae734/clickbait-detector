@@ -13,6 +13,10 @@ app = Flask(__name__)
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
+    
+    if not data or 'title' not in data:
+        return jsonify({'error': 'Missing "title" field in request body'}), 400
+
     prediction_title = data['title']
 
     return jsonify(predict_clickbait(prediction_title, model_components)), 201
