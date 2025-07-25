@@ -1,3 +1,5 @@
+let pageUrl = "";
+
 function getVideoTitleElement() {
     const selectors = [
         'h1.ytd-watch-metadata yt-formatted-string',
@@ -39,7 +41,8 @@ async function predictClickbait(title) {
 
 async function waitForVideoTitleUpdate() {
     const titleElement = getVideoTitleElement();
-    const title = titleElement ? titleElement.textContent.trim() : null;
+    const title = titleElement ? titleElement.getAttribute('title') : null;
+    console.log('Current title:', title);
 
     if (title) {
         // console.log(title);
@@ -48,18 +51,41 @@ async function waitForVideoTitleUpdate() {
 
         if (result) {
             // console.log('Prediction result:', result);
-
             result = (result.combined_probability * 100).toFixed(2);
-            if (titleElement && !titleElement.textContent.includes(' ' + result + '%')) {
-                titleElement.textContent = titleElement.textContent + ' ' + result + '%';
+            titleElement.textContent = title + ' ' + result + '%';
+            if (titleElement.hasAttribute('is-empty')) {
+                titleElement.removeAttribute('is-empty');
             }
         }
         
     } else {
-        setTimeout(waitForVideoTitleUpdate, 1000);
+        setTimeout(waitForVideoTitleUpdate, 2000);
     }
 }
 
 if (window.location.href.includes('/watch?v=')) {
-    waitForVideoTitleUpdate();
+    if (pageUrl !== window.location.href) {
+        pageUrl = window.location.href;
+        console.log(window.location.href);
+        setTimeout(waitForVideoTitleUpdate, 3000);
+    }
 }
+
+function onPageMutation() {
+    if (pageUrl !== window.location.href) {
+        pageUrl = window.location.href;
+        console.log(window.location.href);
+        setTimeout(waitForVideoTitleUpdate, 3000);
+    }
+}
+
+const observer = new MutationObserver((mutations) => {
+    onPageMutation();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeOldValue: true
+});
