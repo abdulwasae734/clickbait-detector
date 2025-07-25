@@ -1,13 +1,16 @@
 import joblib
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from utils import predict_clickbait
+from urllib.parse import unquote
 
 model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'combined.joblib')
 
 model_components = joblib.load(model_path)
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 
 @app.route('/predict', methods=['POST'])
@@ -17,7 +20,7 @@ def predict():
     if not data or 'title' not in data:
         return jsonify({'error': 'Missing "title" field in request body'}), 400
 
-    prediction_title = data['title']
+    prediction_title = unquote(data['title'])
 
     return jsonify(predict_clickbait(prediction_title, model_components)), 200
 
