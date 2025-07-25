@@ -1,5 +1,3 @@
-import joblib
-
 def predict_clickbait(title, model_components, nb_weight=0.5, rf_weight=0.5):
 
     questions = ['What', 'How', 'Why', 'Is', 'Are', 'Do', 'Does', 'Did', 'Can', 'Could', 'Will', 'Would']

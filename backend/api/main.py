@@ -19,8 +19,34 @@ def predict():
 
     prediction_title = data['title']
 
-    return jsonify(predict_clickbait(prediction_title, model_components)), 201
+    return jsonify(predict_clickbait(prediction_title, model_components)), 200
+
+@app.route('/health', methods=['GET'])
+def health():
+    try:
+        if model_components:
+            return jsonify({
+                'status': 'healthy',
+                'message': 'Clickbait API is running',
+                'model_loaded': True
+            }), 200
+        else:
+            return jsonify({
+                'status': 'unhealthy',
+                'message': 'Model not loaded',
+                'model_loaded': False
+            }), 503
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e),
+            'model_loaded': False
+        }), 500
+
+@app.route('/')
+def index():
+    return jsonify({'message': 'Clickbait Prediction API'}), 200
 
 if __name__ == "__main__":
     print("Starting Flask server...")
-    app.run(debug=True)
+    app.run(debug=True, host='localhost', port=8000)

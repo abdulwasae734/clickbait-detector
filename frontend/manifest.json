@@ -1,0 +1,26 @@
+{
+  "name": "ClickBait Detector",
+  "description": "A Chrome extension to detect clickbait content",
+  "version": "0.1",
+  "manifest_version": 3,
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "http://localhost:8000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "assets/icon.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": [
+        "https://www.youtube.com/watch?v=*"
+      ]
+    }
+  ]
+}
