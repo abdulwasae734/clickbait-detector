@@ -1,4 +1,4 @@
-# Clickbait Detector
+# Clickbait Detector (README.md is AI generated - under review)
 
 A machine learning-powered clickbait detection system with a Chrome extension interface and Flask API backend. This project uses ensemble methods to identify clickbait content with high accuracy, specifically designed to work with YouTube video titles.
 
